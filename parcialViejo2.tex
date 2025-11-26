@@ -1,0 +1,105 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{xcolor}
+\usepackage{geometry}
+
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+\newcommand{\problema}[1]{
+    \newpage 
+    \section*{#1}
+    \addcontentsline{toc}{section}{#1}
+}
+
+
+\newcommand{\historia}[4]{
+    \subsection*{#1}
+    \textit{#2}
+    
+    \subsubsection*{Reglas de negocio}
+    \begin{itemize}
+        #3
+    \end{itemize}
+
+    \subsubsection*{Criterios de Aceptación}
+    #4
+    
+    \vspace{0.5cm}
+    \noindent\rule{\textwidth}{0.5pt} 
+    \vspace{0.5cm}
+}
+
+
+\newcommand{\escenario}[4]{
+    \noindent \textbf{#1} \\
+    \textbf{\textcolor{blue}{Dado:}} #2 \\
+    \textbf{\textcolor{blue}{Cuando:}} #3 \\
+    \textbf{\textcolor{blue}{Entonces:}} #4 
+    \vspace{0.3cm}
+}
+
+
+\begin{document}
+\section*{Enunciado}
+
+Se desea modelar un subsistema on-line para el manejo de reservas de turnos en una cancha de futbol 5 \par 
+Para poder realizar una reserva es necesario registrarse en el sistema. Para esto se debe ingresar dni (es único y utilizado como nombre de usuario), nombre, apellido, edad, mail, dirección y en caso de registrase por una recomendación el dni de la persona que recomendó. Una vez registrado el sistema generará una contraseña aleatoria que será enviada al correo ingresado. Si el registro es a través de una recomendación se le sumarán 10 puntos al usuario que ha recomendado. Además, si el usuario que ha recomendado llega a los 100 puntos, se le envia un correo electrónico avisando que es acreedor de un turno gratis, incrementando la cantidad de turnos gratis del usuario recomendado y seteando en 0 su cantidad de puntos..\par 
+Para realizar una reserva es necesario estar autenticado (no debe modelar el inicio ni cierre de sesión) e ingresar, fecha, hora y cancha. Si el turno está libre se otorga la reserva y se manda un mail a la persona que reservó con un código de reserva como comprobante indicando además si es un turno bonificado o el precio del turno. Si el turno está ocupado, se informa que no hay turno para el día y la hora ingresada.\par 
+
+\problema{Problema 2: parcial viejo 2}
+
+
+    \historia{Historia 1: Registrar Usuario} 
+    {Como usuario quiero registrarme en el sistema para poder reservar turnos.} 
+    { 
+    }
+    { 
+        \escenario{Escenario 1: Registro exitoso sin recomendación}
+        {que el dni ``11111111'' no está registrado en el sistema}
+        {el usuario ingresa dni ``11111111'', nombre ``Juan'', apellido ``Pérez'', edad ``30'', mail ``juan@gmail.com''}
+        {el sistema registra al nuevo usuario, envia la contraseña al mail ingresado y confirma el registro al usuario}
+
+        \escenario{Escenario 2: Registro exitoso con recomendación}
+        {que el dni ``22222222'' no está registrado en el sistema y que el dni ``33333333'' ya está registrado y tiene 50 puntos de recomendación}
+        {el usuario ingresa DNI ``22222222'', nombre ``María'', apellido ``Gómez'', edad ``25'', mail ``maria@gomez.com'' y dni de recomendación ``33333333''}
+        {el sistema registra al nuevo usuario, envia la contraseña al mail ingresado, confirma el registro al usuario y suma 10 puntos al usuario con dni ``33333333''}
+
+        \escenario{Escenario 3: Registro exitoso con recomendación}
+        {que el dni ``22222222'' no está registrado en el sistema y que el dni ``33333333'' ya está registrado y tiene 90 puntos de recomendación}
+        {el usuario ingresa DNI ``22222222'', nombre ``María'', apellido ``Gómez'', edad ``25'', mail ``maria@gomez.com'' y dni de recomendación ``33333333''}
+        {el sistema registra al nuevo usuario, envia la contraseña al mail ingresado, confirma el registro al usuario y suma 10 puntos al usuario con dni ``33333333'' y le envía un mail informando que es acreedor de un turno gratis.}
+
+        \escenario{Escenario 4: Registro fallido por dni ya registrado}
+        {que el dni ``11111111'' ya está registrado en el sistema}
+        {el usuario ingresa dni ``11111111'', nombre ``Juan'', apellido ``Pérez'', edad ``30'', mail ``juan@gmail.com''}
+        {el sistema informa que el dni ya está registrado y no permite completar el registro.}
+    }
+
+    \newpage
+
+    \historia{Historia 2: Reservar turno} 
+    {Como usuario autenticado quiero reservar un turno para asegurar la cancha en una fecha y hora.}
+    { 
+        \item es necesario estar autenticado para reservar un turno.
+        \item si el usuario posee turnos gratis acumulados, se utiliza uno para bonificar la reserva.
+    }
+    { 
+        \escenario{Escenario 1: Reserva exitosa con precio (sin beneficio)}
+        {que el usuario está autenticado, que tiene 0 turnos gratis acumulados y que la cancha está libre el día 15/09/2024 a las 20:00}
+        {el usuario ingresa fecha 15/09/2024, hora 20:00 y cancha 3 y presiona ``reservar turno''}
+        {el sistema reserva el turno, envía un mail al usuario con el código de reserva y el precio del turno, y confirma la reserva al usuario.}
+
+        \escenario{Escenario 2: Reserva exitosa bonificada (con beneficio)}
+        {que el usuario está autenticado, que tiene 2 turnos gratis acumulados y que la cancha está libre el día 16/09/2024 a las 18:00}
+        {el usuario ingresa fecha 16/09/2024, hora 18:00 y cancha 1 y presiona ``reservar turno''}
+        {el sistema reserva el turno, envía un mail al usuario con el código de reserva indicando que es un turno bonificado, confirma la reserva al usuario y decrementa en 1 la cantidad de turnos gratis acumulados del usuario.}
+
+        \escenario{Escenario 3: Reserva fallida por turno ocupado}
+        {que el usuario está autenticado y que la cancha está ocupada el día 15/09/2024 a las 20:00}
+        {el usuario ingresa fecha 15/09/2024, hora 20:00 y cancha 3 y presiona ``reservar turno''}
+        {el sistema informa que no hay turno disponible para la fecha y hora ingresada.}
+    }
+
+\end{document}
