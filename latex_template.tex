@@ -1,0 +1,79 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{xcolor}
+\usepackage{geometry}
+
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+\newcommand{\problema}[1]{
+    \newpage 
+    \section*{#1}
+    \addcontentsline{toc}{section}{#1}
+}
+
+
+\newcommand{\historia}[4]{
+    \subsection*{#1}
+    \textit{#2}
+    
+    \subsubsection*{Reglas de negocio}
+    \begin{itemize}
+        #3
+    \end{itemize}
+
+    \subsubsection*{Criterios de Aceptación}
+    #4
+    
+    \vspace{0.5cm}
+    \noindent\rule{\textwidth}{0.5pt} 
+    \vspace{0.5cm}
+}
+
+
+\newcommand{\escenario}[4]{
+    \noindent \textbf{#1} \\
+    \textbf{\textcolor{blue}{Dado:}} #2 \\
+    \textbf{\textcolor{blue}{Cuando:}} #3 \\
+    \textbf{\textcolor{blue}{Entonces:}} #4 
+    \vspace{0.3cm}
+}
+
+
+\begin{document}
+
+\problema{Problema X: [NOMBRE DEL PROBLEMA]}
+
+
+    \historia{Historia 1: [TITULO]} 
+    {Como [ROL] quiero [ACCION] para [BENEFICIO].} 
+    { 
+        \item REGLA 1
+        \item REGLA 2
+    }
+    { 
+        \escenario{Escenario 1: [TITULO]}
+        {[CONDICION INICIAL]}
+        {[ACCION DEL USUARIO]}
+        {[RESULTADO ESPERADO]}
+
+        \escenario{Escenario 2: [TITULO]}
+        {[CONDICION INICIAL]}
+        {[ACCION DEL USUARIO]}
+        {[RESULTADO ESPERADO]}
+    }
+
+    \historia{Historia 2: [TITULO]} 
+    {Como [ROL] quiero [ACCION] para [BENEFICIO].}
+    { 
+        \item REGLA DE NEGOCIO
+    }
+    { 
+        \escenario{Escenario 1: [TITULO]}
+        {[DADO]}
+        {[CUANDO]}
+        {[ENTONCES]}
+    }
+
+\end{document}
