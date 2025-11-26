@@ -1,0 +1,98 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{xcolor}
+\usepackage{geometry}
+
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+\newcommand{\problema}[1]{
+    \newpage 
+    \section*{#1}
+    \addcontentsline{toc}{section}{#1}
+}
+
+
+\newcommand{\historia}[4]{
+    \subsection*{#1}
+    \textit{#2}
+    
+    \subsubsection*{Reglas de negocio}
+    \begin{itemize}
+        #3
+    \end{itemize}
+
+    \subsubsection*{Criterios de Aceptación}
+    #4
+    
+    \vspace{0.5cm}
+    \noindent\rule{\textwidth}{0.5pt} 
+    \vspace{0.5cm}
+}
+
+
+\newcommand{\escenario}[4]{
+    \noindent \textbf{#1} \\
+    \textbf{\textcolor{blue}{Dado:}} #2 \\
+    \textbf{\textcolor{blue}{Cuando:}} #3 \\
+    \textbf{\textcolor{blue}{Entonces:}} #4 
+    \vspace{0.3cm}
+}
+
+
+\begin{document}
+\section*{Enunciado}
+Escribir todas las historias de usuario identificadas con sus respectivas tarjetas para el siguiente dominio: \par
+Se desea modelar un sistema para el seguimiento de pedidos de licencias médicas por parte de los empleados de la Provincla de Buenos Aires. Para solicitar una licencia el empleado debe estar registrado y correctamente autenticado en el sistema (tanto el registro como la autenticación forman parte de un módulo de seguridad aparte que no debe modelarse). \par
+Cuando un empleado quiere solicitar una licencia debe ingresar su CUIL, el tipo de licencia (presencial o telemedicina), la fecha de Inicio de reposo, la matrícula de su médico personal, el diagnóstico y si es para el titular o para un familiar enfermo. Para poder solicitar una licencia el empleado debe tener más de 1 mes de antigüedad, de lo contrario el sistema debe informar el rechazo de la licencia. \par
+Además podrá solicitar una licencia un empleado que no tenga una licencia vigente.\par
+Para registrar una licencia, el sistema genera un código de licencia y lo envía vía mail a la casilla del empleado con la confirmación de la licencia y los días otorgados.\par
+Por otro lado, un administrativo podrá consultar las licencias solicitadas para lo cual ingresa el cuil del empleado y un rango de fechas y el sistema imprime un informe de las licencias solicitadas. Tenga en cuenta que por una cuestión de costos se podrá imprimir un informe por mes para cada empleado.\par
+
+\problema{Problema 1: parcial viejo 1}
+
+
+    \historia{Historia 1: Consultar licencias solicitadas} 
+    {Como empleado administrativo quiero consultar las licencias de un empleado apra poder ver todos sus registros.} 
+    { 
+        \item Solo se debe consultar las licencias del empleado una vez al mes.
+    }
+    { 
+        \escenario{Escenario 1: Consulta Exitosa}
+        {un cuil del empleado 323 y la consulta es la primera vez que se hace en el mes de agosto del año 2020}
+        {el empleado administrativo ingresa cuil 323 rando de fecha 1-08-2020 a 30-08-2020  y presiona ``consultar informe''}
+        {el sistema imprime el informa de las licencias solicitadas del empleado.}
+
+        \escenario{Escenario 2: Consulta fallida por ser segunda consulta hecha en el mes}
+        {un cuil de empleado 323, ya se realizo una consulta en el mes de agosto del año 2020}
+        {el empleado administrativo ingresa cuil 323 rango de fecha 1-08-2020 a 30-08-2020 y presiona ``consultar informe''}
+        {el sistema informa que ya se realizo una consulta en el mes}
+    }
+
+    \newpage
+
+    \historia{Historia 2: Solicitar licencia médica} 
+    {Como empleado quiero solicitar una licencia para poder tener descanso}
+    { 
+        \item el empleado debe tener mas de un mes de antiguedad
+        \item el empleado no debe tener una licencia vigente
+    }
+    { 
+        \escenario{Escenario 1: solicitud Exitosa}
+        {un empleado autenticado con cuil 223 el cual es valido y tiene 4 meses de antiguedad y no tiene una licencia vigente,}
+        {el empleado ingresa cuil 223, tipo de licencia presencial, fecha de inicio 15-06-2020, matricula del medico 445566, diagnostico gripe y selecciona que es para el titular y presiona ``solicitar licencia''}
+        {el sistema acepta la licencia del empleado y envia un mail de confirmacion a la casilla del empleado con el codigo de licencia y los dias otorgados.}
+
+        \escenario{Escenario 2: solicitud fallida por antiguedad menor a un mes}
+        {un empleado autenticado con cuil 224 el cual es valido y tiene 15 dias de antiguedad y no tiene una licencia vigente,}
+        {el empleado ingresa cuil 224, tipo de licencia presencial, fecha de inicio 15-06-2020, matricula del medico 445567, diagnostico gripe y selecciona que es para el titular y presiona ``solicitar licencia''}
+        {el sistema informa que el empleado no posee la antiguedad en el trabajo requerida}
+
+        \escenario{Escenario 3: solicitud fallida por tener licencia vigente}
+        {un empleado autenticado con cuil 225 el cual es valido y tiene 3 meses de antiguedad y tiene una licencia vigente,}
+        {el empleado ingresa cuil 225, tipo de licencia presencial, fecha de inicio 15-06-2020, matricula del medico 445568, diagnostico gripe y selecciona que es para el titular y presiona ``solicitar licencia''}
+        {el sistema informa que el empleado ya posee una licencia vigente}
+    }
+
+\end{document}
