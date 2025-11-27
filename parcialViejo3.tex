@@ -1,0 +1,128 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{xcolor}
+\usepackage{geometry}
+
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+\newcommand{\problema}[1]{
+    \newpage 
+    \section*{#1}
+    \addcontentsline{toc}{section}{#1}
+}
+
+
+\newcommand{\historia}[4]{
+    \subsection*{#1}
+    \textit{#2}
+    
+    \subsubsection*{Reglas de negocio}
+    \begin{itemize}
+        #3
+    \end{itemize}
+
+    \subsubsection*{Criterios de Aceptación}
+    #4
+    
+    \vspace{0.5cm}
+    \noindent\rule{\textwidth}{0.5pt} 
+    \vspace{0.5cm}
+}
+
+
+\newcommand{\escenario}[4]{
+    \noindent \textbf{#1} \\
+    \textbf{\textcolor{blue}{Dado:}} #2 \\
+    \textbf{\textcolor{blue}{Cuando:}} #3 \\
+    \textbf{\textcolor{blue}{Entonces:}} #4 
+    \vspace{0.3cm}
+}
+
+
+\begin{document}
+\section*{Enunciado}
+
+
+El municipio de La Plata busca implementar un sistema para el seguimiento de reclamos vecinales y poder obtener estadísticas. El ingreso de reclamos se realiza a través de un empleado, quien registra el nombre, DNI, correo electrónico. dirección y teléfono del interesado. Luego, el sistema genera un número de reclamo, lo etiqueta como 'pendiente' y envía un correo al interesado con los detalles. Es crucial que tanto la dirección como el teléfono pertenezcan a la ciudad. Además los reclamos inician con nivel de prioridad 1.\par
+Los reclamos acumulan eventos para avanzar hacia una solución. Para agregar un evento, un empleado introduce el número de reclamo, fecha y descripción del trabajo realizado. El sistema vincula el evento al reclamo, aumenta su nivel de prioridad y notifica al interesado por correo electrónico. Si un reclamo alcanza el nivel de prioridad 5 o han transcurrido 15 días desde el último evento, no es posible añadir más eventos y debe informarse. En tales casos, sólo el jefe de área debe cerrarlo. Para cerrar un reclamo, independientemente de su prioridad y días desde el último evento, el jefe de área ingresa el número correspondiente, la fecha, descripción y el resultado de la resolución. Cerrado el reclamo, debe enviarse un correo al interesado con la novedad. Tenga en cuenta que, en el caso de una resolución negativa del reclamo, se requiere adjuntar la imagen de un acta completada por un inspector.\par
+En cualquier momento, debe ser posible obtener la cantidad de reclamos cerrados satisfactoriamente, la cantidad de reclamos cerrados insatisfactoriamente y la cantidad de reclamos pendientes en un rango de fechas (NO realizar esta historia).\par
+
+\problema{Problema 3: pariclal viejo 3}
+
+
+    \historia{Historia 1: Registro} 
+    {como empleado quiero registrar un reclamo para poder iniciar el seguimiento del mismo.} 
+    {
+        \item el reclamo inicia con estado ``pendiente'' y nivel de prioridad 1.
+        \item la dirección y el teléfono deben pertenecer a la ciudad de La Plata.
+        \item el sistema debe enviar un correo al interesado con los detalles del reclamo. 
+
+    }
+    { 
+        \escenario{Escenario 1: Registro exitoso}
+        {que la direccion 7 y 50 y el telefono 22139239232 pertenecen a la ciudad de La Plata,}
+        {el empleado ingresa nombre ``juan perez'', dni ``213123'' , correo ``juanperez@gmail.com00'', direccion ``7 y 50'', telefono ``22139239232''}
+        {el sistema genera un numero de reclamo, lo etiqueta como ``pendiente'' con nivel de prioridad 1 y envia un correo al interesado con los detalles del reclamo.}
+
+        \escenario{Escenario 2: Registro fallido por direccion fuera de la ciudad}
+        {que la direccion ``calle falsa 123'' no pertenece a la ciudad de la plata y el telefono 2932931123}
+        {el empleado ingresa nombre ``maria gomez'', dni ``321321'' , correo ``mariagmail'' , direccion ``calle falsa 123'', telefono ``2932931123''}
+        {el sistema informa que la direccion no pertenece a la ciudad de la plata y no registra el reclamo.}
+
+        \escenario{Escenario 3: Registro fallido por telefono fuera de la ciudad}
+        {que la direccion ``8 y 60'' y el telefono 123456789 que no pertenece a la ciudad de la plata}
+        {el empleado ingresa nombre ``carlos lopez'', dni ``456456'' , correo ``holagmail'' , direccion ``8 y 60'', telefono ``123456789''}
+        {el sistema informa que el telefono no pertenece a la ciudad de la plata y no registra el reclamo.}
+    }
+
+    \newpage
+
+    \historia{Historia 2: Agregar Evento} 
+    {Como empleado quiero agregar eventos al reclamo para registrar el avance hacia la solucion}
+    { 
+        \item No se puede agregar eventos a un reclamo que haya alcanzado nivel de prioridad 5
+        \item No se pueden agregar eventos si pasaron más de 15 días desde el último evento.
+    }
+    { 
+        \escenario{Escenario 1: Agregado de evento exitoso}
+        {que el reclamo numero 1234 tiene prioridad 3 y pasaron 5 dias desde el ultimo evento}
+        {el empleado ingresa numero de reclamo 1234, fecha 10-06-2020, descripcion ``se realizo la inspeccion del lugar''}
+        {el sistema vincula el evento, aumenta la prioridad a 4, envia un correo al interesado notificando el avance e informa operacion exitosa.}
+
+        \escenario{Escenario 2: Agregado de evento fallido por prioridad 5}
+        {que el reclamo numero 5678 tiene prioridad 5}
+        {el empleado ingresa numero de reclamo 5678, fecha 12-06-2020, descripcion ``se realizo la inspeccion del lugar''}
+        {el sistema informa que no se pueden agregar eventos a un reclamo con prioridad  y que debe ser gestionado por el jefe de area.}
+
+        \escenario{Escenario 3: Agregado de evento fallido por mas de 15 dias desde el ultimo evento}
+        {que el reclamo numero 9101 tiene prioridad 4 y pasaron 20 dias desde el ultimo evento}
+        {el empleado ingresa numero de reclamo 9101, fecha 12-06-2020, descripcion ``se realizo la inspeccion del lugar''}
+        {el sistema informa que no se pueden agregar eventos a un reclamo con mas de 15 dias desde el ultimo evento y que debe ser gestionado por el jefe de area.}
+    }
+
+    \newpage
+
+    \historia{Historia 3: Cerrar Reclamo}
+    {como jefe de area quiero cerrar un reclamo para dar por finalizado la gestion}
+    {}
+    { 
+        \escenario{Escenario 1: Cierre exitoso con resolucion positiva}
+        {que el reclamo numero 1122 esta pendiente y tiene prioridad 4}
+        {el jefe de area ingresa numero de reclamo 1122, fecha 20-06-2020, descripcion ``se soluciono el problema'' , resultado ``resolucion positiva''}
+        {el sistema cierra el reclamo, envia un correo al interesado notificando el cierre con resolucion positiva e informa operacion exitosa.}
+
+        \escenario{Escenario 2: Cierre exitoso con resolucion negativa}
+        {que el reclamo numero 3344 esta pendiente y tiene prioridad 5}
+        {el jefe de area ingresa numero de reclamo 3344, fecha 22-06-2020, descripcion ``no se pudo solucionar el problema'' , resultado ``resolucion negativa'' y adjunta la imagen del acta completada por un inspector}
+        {el sistema cierra el reclamo, envia un correo al interesado notificando el cierre con resolucion negativa e informa operacion exitosa.}
+
+        \escenario{Escenario 3: Cierre fallido por resolucion negativa sin acta}
+        {que el reclamo numero 5566 esta pendiente y tiene prioridad 3}
+        {el jefe de area ingresa numero de reclamo 5566, fecha 25-06-2020, descripcion ``no se pudo solucionar el problema'' , resultado ``resolucion negativa'' sin adjuntar el acta completada por un inspector}
+        {el sistema informa que para una resolucion negativa es necesario adjuntar el acta completada por un inspector y no cierra el reclamo.}
+    }
+
+
+\end{document}
