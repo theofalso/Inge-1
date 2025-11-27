@@ -1,0 +1,134 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{xcolor}
+\usepackage{geometry}
+
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+\newcommand{\problema}[1]{
+    \newpage 
+    \section*{#1}
+    \addcontentsline{toc}{section}{#1}
+}
+
+
+\newcommand{\historia}[4]{
+    \subsection*{#1}
+    \textit{#2}
+    
+    \subsubsection*{Reglas de negocio}
+    \begin{itemize}
+        #3
+    \end{itemize}
+
+    \subsubsection*{Criterios de Aceptación}
+    #4
+    
+    \vspace{0.5cm}
+    \noindent\rule{\textwidth}{0.5pt} 
+    \vspace{0.5cm}
+}
+
+
+\newcommand{\escenario}[4]{
+    \noindent \textbf{#1} \\
+    \textbf{\textcolor{blue}{Dado:}} #2 \\
+    \textbf{\textcolor{blue}{Cuando:}} #3 \\
+    \textbf{\textcolor{blue}{Entonces:}} #4 
+    \vspace{0.3cm}
+}
+
+
+\begin{document}
+\section*{Enunciado}
+
+Se desea realizar un sistema para el manejo de turnos en canchas de fútbol 5.\par
+Es necesario la realización de un sistema web donde las personas interesadas puedan obtener turnos en diferentes canchas de fútbol de un complejo. Para esto las personas deben registrarse en la plataforma indicando nombre, apellido, mail (será utilizado como nombre de usuario), edad y domicilio. El cliente nos ha indicado que solo quiere que se registren personas mayores de edad (16 años o más). Una vez que la persona se registra con éxito el sistema genera una contraseña que será enviada al correo que ha sido ingresado.\par
+Una vez registrada la persona puede solicitar turnos en una cancha del complejo, para esto debe iniciar sesión previamente. El cliente desea que si un usuario falla tres veces al iniciar sesión su cuenta sea bloqueada.\par
+Para solicitar un turno, el usuario ingresa cancha, fecha y hora. Si la cancha está libre el turno se le asigna al usuario informando "Su turno ha sido registrado con éxito", si la cancha está ocupada se le informará "Cancha ocupada, por favor seleccione otro día y horario", dándole la posibilidad de volver a seleccionar un turno nuevo. El sistema no debe permitir dar turno con menos de 2 días a la fecha en que se solicita.\par
+\problema{Problema 4: parcial viejo}
+
+
+    \historia{Historia 1: Registro de usuario} 
+    {Como usuario quiero registrarme en la plataforma para poder solicitar turnos en las canchas del complejo.} 
+    { 
+        \item Solo pueden registrarse personas mayores de 16 años.
+        \item el mail debe ser unico en el sistema
+    }
+    { 
+        \escenario{Escenario 1: Registro Exitoso}
+        {que el mail ``juan@gmail.com'' no esta registrado y el usuario es mayor de 16 años}
+        {se ingresa nombre ``juan'', apellido ``perez'' mail ``juan@gmail.com'' edad 17 domicilio ``calle 123''}
+        {el sistema registra al usuario, genera una contraseña y la envía al mail ingresado e informa registro exitoso.}
+
+        \escenario{Escenario 2: Registro Fallido por edad}
+        {que el usuario es menor a 16 años}
+        {se ingresa nombre ``maria'', apellido ``lopez'' mail ``mariagmail.com'' edad 15 domicilio ``calle 456''}
+        {el sistema informa que no se puede registrar por ser menor de edad.}
+
+        \escenario{Escenario 3: Registro Fallido por mail ya registrado}
+        {que el mail ``admin@mail.com'' ya se encuentra registrado en el sistema}
+        {se ingresa nombre ``carlos'', apellido ``gomez'' mail ``admin@mail'' edad 20 domicilio ``calle 789''}
+        {el sistema informa que el mail ya se encuentra registrado y no registra al usuario.}
+    }
+
+    \newpage
+
+    \historia{Historia 2: iniciar sesion} 
+    {Como usuario registrado quiero iniciar sesión para poder solicitar turnos en las canchas del complejo.}
+    { 
+        \item la cuenta se bloquea al tercer intento fallido de inicio de sesion.
+    }
+    { 
+        \escenario{Escenario 1: inicio de sesion exitoso}
+        {el usuario ``juan@mail.com'' con contraseña ``12345''}
+        {ingresa mail ``juan@mail.com'' y contraseña ``12345'' y presiona ``iniciar sesion''}
+        {el sistema inicia la sesion del usuario y le permite solicitar turnos.}
+
+        \escenario{Escenario 2: inicio de sesion fallido usuario inexistente}
+        {el mail ``nuevomail@mail.com'' no registrado}
+        {ingresa mail ``nuevomail@mail.com'' y contraseña ``cualquieracontraseña'' y presiona ``iniciar sesion''}
+        {el sistema informa que el usuario no existe.}
+
+        \escenario{Escenario 3: inicio de sesion fallido por contraseña incorrecta sin bloqueo}
+        {el usuario ``pepemail.com'' con contraseña ``contraseña123'' ha ingresado mal su contraseña en 1 intento previo}
+        {ingresa mail ``pepemail.com'' y contraseña ``contraseñaincorrecta'' y presiona ``iniciar sesion''}
+        {el sistema informa que la contraseña es incorrecta y le quedan 2 intentos antes de bloquear la cuenta.}
+
+        \escenario{Escenario 4: inicio de sesion fallido por contraseña incorrecta con bloqueo}
+        {el usuario ``pepemail.com'' con contraseña ``contraseña123'' ha ingresado mal su contraseña en 2 intentos previos}
+        {ingresa mail ``pepemail.com'' y contraseña ``contraseñaincorrecta'' y presiona ``iniciar sesion''}
+        {el sistema informa que la contraseña es incorrecta y bloquea la cuenta del usuario.}
+
+        \escenario {Escenario 5: inicio de sesion fallido por cuenta bloqueada}
+        {el usuario ``pepemail.com'' tiene su cuenta bloqueada}
+        {ingresa mail ``pepemail.com'' y contraseña ``contraseña123'' y presiona ``iniciar sesion''}
+        {el sistema informa que la cuenta se encuentra bloqueada y no permite iniciar sesion.}
+    }
+
+        \newpage
+
+    \historia{Historia 3: Solicitar turno}
+    {Como usuario registrado quiero solicitar turnos en las canchas del complejo para poder jugar al fútbol.}
+    { 
+        \item no se pueden solicitar turnos con menos de 2 días de anticipación.
+    }
+    { 
+        \escenario{Escenario 1: solicitud de turno exitosa}
+        {la cancha 1 está libre el día 20-06-2024 a las 18:00}
+        {el usuario ingresa cancha 1, fecha 20-06-2024, hora 18:00 y presiona ``solicitar turno''}
+        {el sistema registra el turno y le informa al usuario ``Su turno ha sido registrado con éxito''.}
+        \escenario{Escenario 2: solicitud de turno fallida por cancha ocupada}
+        {la cancha 2 está ocupada el día 22-06-2024 a las 20:00}
+        {el usuario ingresa cancha 2, fecha 22-06-2024, hora 20:00 y presiona ``solicitar turno''}
+        {el sistema informa al usuario ``Cancha ocupada, por favor seleccione otro día y horario''.}
+        \escenario{Escenario 3: solicitud de turno fallida por falta de anticipación}
+        {la fecha actual es 15-06-2024}
+        {el usuario ingresa cancha 3, fecha 16-06-2024, hora 19:00 y presiona ``solicitar turno''}
+        {el sistema informa al usuario que no se pueden solicitar turnos con menos de 2 días de anticipación.}
+    }
+    
+
+\end{document}
