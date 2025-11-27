@@ -120,10 +120,12 @@ Para solicitar un turno, el usuario ingresa cancha, fecha y hora. Si la cancha e
         {la cancha 1 está libre el día 20-06-2024 a las 18:00}
         {el usuario ingresa cancha 1, fecha 20-06-2024, hora 18:00 y presiona ``solicitar turno''}
         {el sistema registra el turno y le informa al usuario ``Su turno ha sido registrado con éxito''.}
+        
         \escenario{Escenario 2: solicitud de turno fallida por cancha ocupada}
         {la cancha 2 está ocupada el día 22-06-2024 a las 20:00}
         {el usuario ingresa cancha 2, fecha 22-06-2024, hora 20:00 y presiona ``solicitar turno''}
         {el sistema informa al usuario ``Cancha ocupada, por favor seleccione otro día y horario''.}
+        
         \escenario{Escenario 3: solicitud de turno fallida por falta de anticipación}
         {la fecha actual es 15-06-2024}
         {el usuario ingresa cancha 3, fecha 16-06-2024, hora 19:00 y presiona ``solicitar turno''}
